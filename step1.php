@@ -8,8 +8,12 @@ if (!isset($_GET['username'])) {
 
 require('db.php');
 
-// delete old session data
+// delete old session and usedNonce data
 $q = "DELETE FROM sessions WHERE expire < NOW()";
+mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
+$q = "UPDATE usedNonces u LEFT JOIN sessions s ON u.session_id = s.id SET `delete`=1 WHERE s.id IS NULL";
+mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
+$q = "DELETE FROM usedNonces WHERE `delete`";
 mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
 
 $username = $_GET['username'];
