@@ -32,6 +32,7 @@ if (!isset($_COOKIE['session_id'])) {
 	<script>window.securelogin_root = '<?=htmlentities($securelogin_root)?>'</script>
 	<script src="<?=$securelogin_root?>/js/jquery.js"></script>
 	<script src="<?=$securelogin_root?>/js/md5.js"></script>
+	<script src="<?=$securelogin_root?>/js/noncedUrl.js"></script>
 	<script src="<?=$securelogin_root?>/js/loginform.js"></script>
 	
 	<?

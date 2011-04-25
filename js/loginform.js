@@ -33,8 +33,8 @@ $(function() {
 						
 						localStorage.sessionAuthHash = hex_md5(session_id + hash1);
 						localStorage.nonce = 10000; // TODO: randomize? limit?
-						var nonceHash = hex_md5(localStorage.sessionAuthHash + localStorage.nonce);
-						location.href += '?&nonce=' + localStorage.nonce + '&noncehash=' + nonceHash;
+						
+						location.href = noncedUrl(location.href);
 					}
 				}, 'json');
 				
