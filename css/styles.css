@@ -1,0 +1,11 @@
+label {
+	display: block;
+}
+
+input {
+	display: block;
+}
+
+.submit_button {
+	display: none; /* for no-script. will be set to block by javascript */
+}
