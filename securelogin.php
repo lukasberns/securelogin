@@ -18,6 +18,11 @@ if (isset($_GET['step'])) {
 
 if (!isset($_COOKIE['session_id'])) {
 	// display login form
+	
+	if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'):
+		echo '"Not logged in"';
+	else:
+	
 	?>
 	
 	<link rel="stylesheet" href="<?=$securelogin_root?>/css/styles.css" />
@@ -36,7 +41,7 @@ if (!isset($_COOKIE['session_id'])) {
 	<script src="<?=$securelogin_root?>/js/loginform.js"></script>
 	
 	<?
-	
+	endif;
 	die();
 }
 else {
