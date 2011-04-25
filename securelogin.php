@@ -59,7 +59,6 @@ else {
 		$user = mysql_fetch_assoc($qr);
 		
 		if (!$user) {
-			echo __LINE__;
 			return false;
 		}
 		
@@ -73,13 +72,11 @@ else {
 		$qr = mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
 		
 		if (mysql_result($qr, 0) > 0) {
-			echo __LINE__;
 			return false;
 		}
 		
 		// check if nonce matches nonceHash
 		if ($nonceHash != md5($user['sessionAuthHash'] . $nonce)) {
-			echo __LINE__;
 			return false;
 		}
 		
@@ -97,9 +94,16 @@ else {
 	if (!isset($_GET['nonce'])
 		or !isset($_GET['noncehash'])
 		or !validate_session($session_id, $_GET['nonce'], $_GET['noncehash'])) {
+		// session timeout management,
 		// session hijack and csrf prevention
 		
-		die('What the hacker!');
+		// log user out
+		$q = sprintf("DELETE FROM sessions WHERE id = '%s'", mysql_real_escape_string($session_id));
+		mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
+		
+		setcookie('session_id', 'deleted', time()-30000000);
+		header('Location: '.$_SERVER['REQUEST_URI']);
+		die();
 	}
 }
 
