@@ -112,7 +112,12 @@ else {
 		mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
 		
 		setcookie('session_id', 'deleted', time()-30000000);
-		header('Location: '.$_SERVER['REQUEST_URI']);
+		
+		$url = preg_replace('/&?logout=?/', '', $_SERVER['REQUEST_URI']);
+		if (substr($url, -1) == '?') {
+			$url = substr($url, 0, -1);
+		}
+		header('Location: '.$url);
 		die();
 	}
 }
