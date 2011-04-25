@@ -44,7 +44,7 @@ else {
 	
 	$session_id = $_COOKIE['session_id'];
 	
-	function validate_session($session_id, $nonce, $nonceHash) {
+	function validate_session($session_id) {
 		// check if user is valid and session has not expired
 		$q = sprintf(
 			"SELECT * FROM accounts a
@@ -62,6 +62,17 @@ else {
 		if (!$user) {
 			return false;
 		}
+		
+		if (defined('NONCE_NOT_NEEDED') and NONCE_NOT_NEEDED) {
+			return true;
+		}
+		
+		if (!isset($_GET['nonce']) or !isset($_GET['nonceHash'])) {
+			return false;
+		}
+		
+		$nonce = $_GET['nonce'];
+		$nonceHash = $_GET['nonceHash'];
 		
 		// check if nonce has not been used
 		$q = sprintf(
@@ -92,10 +103,7 @@ else {
 		return true;
 	}
 	
-	if (!isset($_GET['nonce'])
-		or !isset($_GET['noncehash'])
-		or !validate_session($session_id, $_GET['nonce'], $_GET['noncehash'])
-		or isset($_GET['logout'])) {
+	if (!validate_session($session_id) or isset($_GET['logout'])) {
 		// session timeout management,
 		// session hijack and csrf prevention
 		

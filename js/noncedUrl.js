@@ -2,21 +2,21 @@ function noncedUrl(url) {
 	localStorage.nonce++;
 	var nonceHash = hex_md5(localStorage.sessionAuthHash + localStorage.nonce);
 	
-	// split at '?'
-	var indexQ = url.indexOf('?');
-	if (indexQ == -1) {
-		indexQ = url.length;
-	}
-	var beforeQ = url.substr(0, indexQ);
-	var afterQ = url.substr(indexQ + 1); // excludes '?'
-	
 	// split at '#'
-	var indexH = afterQ.indexOf('#');
+	var indexH = url.indexOf('#');
 	if (indexH == -1) {
-		indexH = afterQ.length;
+		indexH = url.length;
 	}
-	var args_string = afterQ.substr(0, indexH);
-	var hash = afterQ.substr(indexH); // includes '#'
+	var beforeH = url.substr(0, indexH);
+	var hash = url.substr(indexH); // includes '#'
+	
+	// split at '?'
+	var indexQ = beforeH.indexOf('?');
+	if (indexQ == -1) {
+		indexQ = beforeH.length;
+	}
+	var beforeQ = beforeH.substr(0, indexQ);
+	var args_string = beforeH.substr(indexQ + 1); // excludes '?'
 	
 	// parse args
 	var args_array = args_string.split('&');
