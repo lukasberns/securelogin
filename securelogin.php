@@ -93,7 +93,8 @@ else {
 	
 	if (!isset($_GET['nonce'])
 		or !isset($_GET['noncehash'])
-		or !validate_session($session_id, $_GET['nonce'], $_GET['noncehash'])) {
+		or !validate_session($session_id, $_GET['nonce'], $_GET['noncehash'])
+		or isset($_GET['logout'])) {
 		// session timeout management,
 		// session hijack and csrf prevention
 		
