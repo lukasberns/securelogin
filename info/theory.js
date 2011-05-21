@@ -1,5 +1,3 @@
-
-
 server step1(<POST> $username </POST>) {
 	$user = db.user($username)
 	$challenge = random()
