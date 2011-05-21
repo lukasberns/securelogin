@@ -6,18 +6,20 @@ if (!isset($_GET['username'])) {
 	die('"Error: No username specified"');
 }
 
-require('db.php');
+$accountsTable = SECURELOGIN_ACCOUNTS_TABLE;
+$sessionsTable = SECURELOGIN_SESSIONS_TABLE;
+$usedNoncesTable = SECURELOGIN_USED_NONCES_TABLE;
 
 // delete old session and usedNonce data
-$q = "DELETE FROM sessions WHERE expire < NOW()";
+$q = "DELETE FROM `$sessionsTable` WHERE expire < NOW()";
 mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
-$q = "UPDATE usedNonces u LEFT JOIN sessions s ON u.session_id = s.id SET `delete`=1 WHERE s.id IS NULL";
+$q = "UPDATE `$usedNoncesTable` u LEFT JOIN sessions s ON u.session_id = s.id SET `delete`=1 WHERE s.id IS NULL";
 mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
-$q = "DELETE FROM usedNonces WHERE `delete`";
+$q = "DELETE FROM `$usedNoncesTable` WHERE `delete`";
 mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
 
 $username = $_GET['username'];
-$q = sprintf("SELECT * FROM accounts WHERE username = '%s'", mysql_real_escape_string($username));
+$q = sprintf("SELECT * FROM `$accountsTable` WHERE username = '%s'", mysql_real_escape_string($username));
 $qr = mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
 $user = mysql_fetch_assoc($qr);
 
@@ -37,7 +39,7 @@ else {
 	$sessionAuthHash = md5($session_id . $user['hash1']);
 	
 	$q = sprintf(
-		"INSERT INTO sessions (id, account, ip, challenge, expire, sessionAuthHash)
+		"INSERT INTO `$sessionsTable` (id, account, ip, challenge, expire, sessionAuthHash)
 		VALUES ('%s', '%s', '%s', '%s', NOW() + INTERVAL 10 SECOND, '%s')",
 		$session_id,
 		$user['id'],

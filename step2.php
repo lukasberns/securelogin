@@ -4,13 +4,15 @@ if (!isset($_POST['session_id']) or !isset($_POST['hash2']) or !isset($_POST['re
 	die('"session_id, hash2 or resp missing"');
 }
 
-require('db.php');
+$accountsTable = SECURELOGIN_ACCOUNTS_TABLE;
+$sessionsTable = SECURELOGIN_SESSIONS_TABLE;
+$usedNoncesTable = SECURELOGIN_USED_NONCES_TABLE;
 
 $session_id = $_POST['session_id'];
 $q = sprintf(
 	"SELECT *
-	FROM sessions s
-	INNER JOIN accounts a
+	FROM `$sessionsTable` s
+	INNER JOIN `$accountsTable` a
 	ON s.account = a.id
 	WHERE s.id = '%s'
 	AND s.ip = '%s'
@@ -32,7 +34,7 @@ if (md5($session['challenge'].$session['hash1']) == $_POST['resp']
 	and $session['hash23'] == md5($session['salt3'] . $_POST['hash2'])) {
 	// login successful
 	
-	$q = sprintf("UPDATE sessions SET expire = NOW() + INTERVAL 2 HOUR, challenge = '' WHERE id = '%s'", mysql_real_escape_string($session_id));
+	$q = sprintf("UPDATE `$sessionsTable` SET expire = NOW() + INTERVAL 2 HOUR, challenge = '' WHERE id = '%s'", mysql_real_escape_string($session_id));
 	mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
 	
 	setcookie('session_id', $session_id, time()+2*3600);

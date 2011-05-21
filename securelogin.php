@@ -5,6 +5,12 @@ $securelogin_root = str_ireplace($_SERVER['DOCUMENT_ROOT'], '', $securelogin_dir
 if ($securelogin_root[0] != '/') $securelogin_root = "/$securelogin_root";
 if (substr($securelogin_root, -1) == '/') $securelogin_root = substr($securelogin_root, 0, -1);
 
+$config_file = $securelogin_dir.'/config.php';
+if (!file_exists($config_file)) {
+	die('Please edit the config.sample.php file and rename it to config.php in the '.$securelogin_dir.' directory.');
+}
+require($config_file);
+
 if (isset($_GET['step'])) {
 	switch ($_GET['step']) {
 		case 1:
@@ -51,9 +57,13 @@ else {
 	
 	function validate_session($session_id) {
 		// check if user is valid and session has not expired
+		$accountsTable = SECURELOGIN_ACCOUNTS_TABLE;
+		$sessionsTable = SECURELOGIN_SESSIONS_TABLE;
+		$usedNoncesTable = SECURELOGIN_USED_NONCES_TABLE;
+		
 		$q = sprintf(
-			"SELECT * FROM accounts a
-			JOIN sessions s
+			"SELECT * FROM `$accountsTable` a
+			JOIN `$sessionsTable` s
 			ON a.id = s.account
 			WHERE s.id = '%s'
 			AND expire > NOW()
@@ -99,7 +109,7 @@ else {
 		
 		// session is valid, so invalidate nonce
 		$q = sprintf(
-			"INSERT INTO usedNonces (session_id, nonce)
+			"INSERT INTO `$usedNoncesTable` (session_id, nonce)
 			VALUES ('%s', '%s')",
 			mysql_real_escape_string($session_id),
 			mysql_real_escape_string($nonce));
@@ -112,8 +122,10 @@ else {
 		// session timeout management,
 		// session hijack and csrf prevention
 		
+		$sessionsTable = SECURELOGIN_SESSIONS_TABLE;
+		
 		// log user out
-		$q = sprintf("DELETE FROM sessions WHERE id = '%s'", mysql_real_escape_string($session_id));
+		$q = sprintf("DELETE FROM `$sessionsTable` WHERE id = '%s'", mysql_real_escape_string($session_id));
 		mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
 		
 		setcookie('session_id', 'deleted', time()-30000000);
