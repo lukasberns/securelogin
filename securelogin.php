@@ -7,6 +7,10 @@ if (substr($securelogin_root, -1) == '/') $securelogin_root = substr($securelogi
 
 require($securelogin_dir.'/read_config.php');
 
+if (!defined('SECURELOGIN_REQUIRE_NONCE')) {
+	define('SECURELOGIN_REQUIRE_NONCE', false);
+}
+
 if (isset($_GET['step'])) {
 	switch ($_GET['step']) {
 		case 1:
@@ -84,7 +88,7 @@ else {
 			return false;
 		}
 		
-		if (defined('NONCE_NOT_NEEDED') and NONCE_NOT_NEEDED) {
+		if (!SECURELOGIN_REQUIRE_NONCE) {
 			return true;
 		}
 		
