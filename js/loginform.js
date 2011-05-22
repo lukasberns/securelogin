@@ -54,7 +54,12 @@ $(function() {
 						localStorage.sessionAuthHash = hex_md5(session_id + hash1);
 						localStorage.nonce = 10000; // TODO: randomize? limit?
 						
-						location.reload();
+						if (require_nonce) {
+							location.href = noncedUrl(location.href);
+						}
+						else {
+							location.reload();
+						}
 					}
 				}, 'json');
 				

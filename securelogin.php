@@ -49,6 +49,7 @@ if (!isset($_COOKIE['session_id'])) {
 		</div>
 	</form>
 	
+	<script type="text/javascript">window.require_nonce = <?=SECURELOGIN_REQUIRE_NONCE?'true':'false'?>;</script>
 	<script type="text/javascript" src="<?=$securelogin_root?>/js/jquery.js"></script>
 	<script type="text/javascript" src="<?=$securelogin_root?>/js/md5.js"></script>
 	<script type="text/javascript" src="<?=$securelogin_root?>/js/noncedUrl.js"></script>
