@@ -10,19 +10,19 @@ $(function() {
 	
 	form.submit(function() {
 		try {
-			if (!username_input.val()) {
+			var username = username_input.val();
+			var password = password_input.val();
+			
+			if (!username) {
 				username_input.focus();
 				error_message.html('Please enter your username.');
 				throw 0;
 			}
-			if (!password_input.val()) {
+			if (!password) {
 				password_input.focus();
 				error_message.html('Please enter your password.');
 				throw 0;
 			}
-			
-			var username = username_input.val();
-			var password = password_input.val();
 			
 			$.get('?step=1', { username: username }, function(step1) {
 				
