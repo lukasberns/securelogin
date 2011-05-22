@@ -40,7 +40,7 @@ label input {
 /* Button styles taken from: http://www.zurb.com/playground/google-buttons */
 
 .submit_button {
-	display: none; /* for no-script. will be set to block by javascript */
+	display: none; /* for no-script. will be set to inline-block by javascript */
 	font-size: 1em;
 	margin: 1em 0;
 	padding: .42em 1em;
@@ -53,7 +53,6 @@ label input {
 	color: #333;
 	text-decoration: none;
 	cursor: pointer;
-	display: inline-block;
 	text-align: center;
 	text-shadow: 0px 1px 1px rgba(255,255,255,1);
 	line-height: 1;
