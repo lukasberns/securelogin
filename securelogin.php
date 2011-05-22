@@ -49,7 +49,6 @@ if (!isset($_COOKIE['session_id'])) {
 		<input type="submit" value="Login" class="submit_button" /> <div class="error"></div>
 	</form>
 	
-	<script type="text/javascript">window.securelogin_root = '<?=htmlentities($securelogin_root)?>'</script>
 	<script type="text/javascript" src="<?=$securelogin_root?>/js/jquery.js"></script>
 	<script type="text/javascript" src="<?=$securelogin_root?>/js/md5.js"></script>
 	<script type="text/javascript" src="<?=$securelogin_root?>/js/noncedUrl.js"></script>
