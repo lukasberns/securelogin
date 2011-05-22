@@ -5,14 +5,7 @@ $securelogin_root = str_ireplace($_SERVER['DOCUMENT_ROOT'], '', $securelogin_dir
 if ($securelogin_root[0] != '/') $securelogin_root = "/$securelogin_root";
 if (substr($securelogin_root, -1) == '/') $securelogin_root = substr($securelogin_root, 0, -1);
 
-$config_file = $securelogin_dir.'/securelogin.config.php';
-if (!file_exists($config_file)) {
-	$config_file = $securelogin_dir.'/../securelogin.config.php';
-	if (!file_exists($config_file)) {
-		die('Please edit the securelogin.config.sample.php file and rename it to securelogin.config.php in the '.$securelogin_dir.' directory. You can also put it into one directory higher.');
-	}
-}
-require($config_file);
+require($securelogin_dir.'/read_config.php');
 
 if (isset($_GET['step'])) {
 	switch ($_GET['step']) {
