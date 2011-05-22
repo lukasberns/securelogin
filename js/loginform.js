@@ -26,6 +26,8 @@ $(function() {
 				throw 0;
 			}
 			
+			inputs.attr('disabled', 'disable');
+			
 			$.get('?step=1', { username: username }, function(step1) {
 				
 				// process resp and go to step2
@@ -40,6 +42,7 @@ $(function() {
 						// clear password field and show error message
 						console.log('Login error: '+step2);
 						
+						inputs.removeAttr('disabled');
 						password_input.val('').focus();
 						error_message.html('Username or password wrong.');
 					}
