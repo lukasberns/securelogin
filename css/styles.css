@@ -1,15 +1,79 @@
-label {
-	display: block;
+body {
+	background: #eee;
+	font-family: sans-serif;
 }
 
-input {
+form {
+	background: white;
+	border: 1px solid #ccc;
+	margin: 100px auto 0;
+	padding: 1em 2em;
+	width: 360px;
+}
+
+h1 {
+	font-size: 2em;
+	font-weight: normal;
+	margin: .2em 0 .5em;
+}
+
+label {
 	display: block;
+	color: #666;
+	font-size: .8em;
+	margin: 1em 1.5em 0 0;
+}
+
+label input {
+	display: block;
+	font-size: 1.25em;
+	width: 100%;
+	height: 1em;
+	padding: .5em;
 }
 
 .error {
 	color: red;
 }
 
+/* Button styles taken from: http://www.zurb.com/playground/google-buttons */
+
 .submit_button {
 	display: none; /* for no-script. will be set to block by javascript */
+	font-size: 1em;
+	margin: 1em 0;
+	padding: .42em 1em;
+	-webkit-border-radius: 1.25em;
+	-moz-border-radius: 1.25em;
+	border-radius: 1.25em;
+	border: solid 1px rgb(153, 153, 153);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 255, 255)), to(#ddd));
+	background: -moz-linear-gradient(top, white, #ddd);
+	color: #333;
+	text-decoration: none;
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	text-shadow: 0px 1px 1px rgba(255,255,255,1);
+	line-height: 1;
 }
+
+.submit_button:active {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(200, 200, 200)), to(rgb(240, 240, 240)));
+	background: -moz-linear-gradient(top, rgb(200, 200, 200), rgb(245, 245, 245));
+}
+
+.submit_button:disabled {
+	color: #777;
+}
+
+.submit_button:focus {
+	border: solid 1px rgb(135, 135, 135);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(240, 240, 240)), to(rgb(200, 200, 200)));
+	background: -moz-linear-gradient(top, rgb(240, 240, 240), rgb(200, 200, 200));
+	outline: 0;
+	-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+

@@ -43,6 +43,7 @@ if (!isset($_COOKIE['session_id'])) {
 </head>
 <body>
 	<form>
+		<h1>Login</h1>
 		<label>Username <input type="text" name="username" value="user" /></label>
 		<label>Password <input type="password" name="password" value="password" /></label>
 		<noscript>You have to turn javascript on to login</noscript>
