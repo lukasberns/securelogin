@@ -44,10 +44,12 @@ if (!isset($_COOKIE['session_id'])) {
 <body>
 	<form>
 		<h1>Login</h1>
-		<label>Username <input type="text" name="username" /></label>
-		<label>Password <input type="password" name="password" /></label>
-		<noscript>You have to turn javascript on to login</noscript>
-		<input type="submit" value="Login" class="submit_button" /> <div class="error"></div>
+		<label>Username <input type="text" name="username" disabled="" /></label>
+		<label>Password <input type="password" name="password" disabled="" /></label>
+		<input type="submit" value="Login" class="submit_button" disabled="" />
+		<div class="error">
+			<noscript>You have to turn javascript on to login</noscript>
+		</div>
 	</form>
 	
 	<script type="text/javascript" src="<?=$securelogin_root?>/js/jquery.js"></script>

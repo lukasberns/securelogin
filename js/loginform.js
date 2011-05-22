@@ -1,5 +1,4 @@
 $(function() {
-	$('.submit_button').css('display', 'inline-block');
 	var form = $('form');
 	username_input = form.find('[name=username]');
 	password_input = form.find('[name=password]');
@@ -53,5 +52,6 @@ $(function() {
 		}
 	});
 	
+	username_input.add(password_input).add('.submit_button').removeAttr('disabled');
 	username_input.focus();
 });
