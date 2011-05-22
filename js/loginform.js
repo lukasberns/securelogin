@@ -15,8 +15,8 @@ $(function() {
 			$.get('?step=1', { username: username }, function(step1) {
 				
 				// process resp and go to step2
-				var hash1 = hex_md5(step1.salt1 + password);
-				var hash2 = hex_md5(step1.salt2 + password);
+				var hash1 = hex_md5(step1.salt1 + username + password);
+				var hash2 = hex_md5(step1.salt2 + username + password);
 				var resp = hex_md5(step1.challenge + hash1);
 				var session_id = step1.session_id;
 				

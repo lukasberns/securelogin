@@ -33,8 +33,8 @@ server step2(<POST> $username, $responce, $hash2 </POST>) {
 browser {
 	get $username, $password from user input
 	$step1 = step1($username)
-	$hash1 = hash($step1.salt1 . $password)
-	$hash2 = hash($step1.salt2 . $password)
+	$hash1 = hash($step1.salt1 . $username . $password)
+	$hash2 = hash($step1.salt2 . $username . $password)
 	$responce = hash($step1.challenge . $hash1)
 	
 	if (step2($username, $responce, $hash2)) {
@@ -117,7 +117,7 @@ browser {
 }
 
 broser on login {
-	hash1 = hash(salt1 . password) // <-- this must not be transferred
+	hash1 = hash(salt1 . username . password) // <-- this must not be transferred
 	localStorage.sessionAuthHash = hash(session_id + hash1)
 }
 
