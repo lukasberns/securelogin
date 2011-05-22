@@ -1,8 +1,10 @@
 $(function() {
 	var form = $('form');
-	username_input = form.find('[name=username]');
-	password_input = form.find('[name=password]');
-	error_message = form.find('.error');
+	var username_input = form.find('[name=username]');
+	var password_input = form.find('[name=password]');
+	var submit_button = form.find('.submit_button');
+	var inputs = username_input.add(password_input).add(submit_button);
+	var error_message = form.find('.error');
 	
 	username_input.add(password_input).keydown(function() {
 		error_message.html('');
@@ -60,6 +62,6 @@ $(function() {
 		}
 	});
 	
-	username_input.add(password_input).add('.submit_button').removeAttr('disabled');
+	inputs.removeAttr('disabled');
 	username_input.focus();
 });
