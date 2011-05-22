@@ -6,6 +6,10 @@ input {
 	display: block;
 }
 
+.error {
+	color: red;
+}
+
 .submit_button {
 	display: none; /* for no-script. will be set to block by javascript */
 }

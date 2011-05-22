@@ -1,10 +1,15 @@
 $(function() {
 	$('.submit_button').show();
-	username_input = $('[name=username]');
-	password_input = $('[name=password]');
+	var form = $('form');
+	username_input = form.find('[name=username]');
+	password_input = form.find('[name=password]');
+	error_message = form.find('.error');
 	
-	var form = $('form')
-	.submit(function() {
+	username_input.add(password_input).keydown(function() {
+		error_message.html('');
+	});
+	
+	form.submit(function() {
 		try {
 			if (!username_input.val()) { username_input.focus(); throw 0; }
 			if (!password_input.val()) { password_input.focus(); throw 0; }
@@ -25,6 +30,9 @@ $(function() {
 						// login failed / error
 						// clear password field and show error message
 						console.log('Login error: '+step2);
+						
+						password_input.val('').focus();
+						error_message.html('Username or password wrong.');
 					}
 					else {
 						// login succeeded

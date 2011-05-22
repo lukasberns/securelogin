@@ -40,7 +40,7 @@ if (!isset($_COOKIE['session_id'])) {
 		<label>Username <input type="text" name="username" value="user" /></label>
 		<label>Password <input type="password" name="password" value="password" /></label>
 		<noscript>You have to turn javascript on to login</noscript>
-		<input type="submit" value="Login" class="submit_button" />
+		<input type="submit" value="Login" class="submit_button" /> <div class="error"></div>
 	</form>
 	
 	<script>window.securelogin_root = '<?=htmlentities($securelogin_root)?>'</script>
