@@ -33,9 +33,15 @@ if (!isset($_COOKIE['session_id'])) {
 	else:
 	
 	?>
-	
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Log in</title>
 	<link rel="stylesheet" href="<?=$securelogin_root?>/css/styles.css" />
-	
+</head>
+<body>
 	<form>
 		<label>Username <input type="text" name="username" value="user" /></label>
 		<label>Password <input type="password" name="password" value="password" /></label>
@@ -43,13 +49,15 @@ if (!isset($_COOKIE['session_id'])) {
 		<input type="submit" value="Login" class="submit_button" /> <div class="error"></div>
 	</form>
 	
-	<script>window.securelogin_root = '<?=htmlentities($securelogin_root)?>'</script>
-	<script src="<?=$securelogin_root?>/js/jquery.js"></script>
-	<script src="<?=$securelogin_root?>/js/md5.js"></script>
-	<script src="<?=$securelogin_root?>/js/noncedUrl.js"></script>
-	<script src="<?=$securelogin_root?>/js/loginform.js"></script>
+	<script type="text/javascript">window.securelogin_root = '<?=htmlentities($securelogin_root)?>'</script>
+	<script type="text/javascript" src="<?=$securelogin_root?>/js/jquery.js"></script>
+	<script type="text/javascript" src="<?=$securelogin_root?>/js/md5.js"></script>
+	<script type="text/javascript" src="<?=$securelogin_root?>/js/noncedUrl.js"></script>
+	<script type="text/javascript" src="<?=$securelogin_root?>/js/loginform.js"></script>
+</body>
+</html>
+<?
 	
-	<?
 	endif;
 	die();
 }
