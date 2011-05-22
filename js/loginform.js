@@ -52,4 +52,6 @@ $(function() {
 			return false;
 		}
 	});
+	
+	username_input.focus();
 });
