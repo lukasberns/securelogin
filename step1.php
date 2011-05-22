@@ -13,7 +13,7 @@ $usedNoncesTable = SECURELOGIN_USED_NONCES_TABLE;
 // delete old session and usedNonce data
 $q = "DELETE FROM `$sessionsTable` WHERE expire < NOW()";
 mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
-$q = "UPDATE `$usedNoncesTable` u LEFT JOIN sessions s ON u.session_id = s.id SET `delete`=1 WHERE s.id IS NULL";
+$q = "UPDATE `$usedNoncesTable` u LEFT JOIN `$sessionsTable` s ON u.session_id = s.id SET `delete`=1 WHERE s.id IS NULL";
 mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
 $q = "DELETE FROM `$usedNoncesTable` WHERE `delete`";
 mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
