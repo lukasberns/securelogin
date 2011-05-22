@@ -34,6 +34,7 @@ label input {
 
 .error {
 	color: red;
+	display: inline;
 }
 
 /* Button styles taken from: http://www.zurb.com/playground/google-buttons */
