@@ -22,8 +22,29 @@ if (isset($_GET['step'])) {
 	}
 }
 
-if (!isset($_COOKIE['session_id'])) {
+$session_id = isset($_COOKIE['session_id']) ? $_COOKIE['session_id'] : '';
+
+if (isset($_GET['logout'])) {
+	// remove the logout from the url
+	
+	if ($session_id) {
+		invalidate_session($session_id);
+	}
+	
+	$url = preg_replace('/&?logout=?/', '', $_SERVER['REQUEST_URI']);
+	if (substr($url, -1) == '?') {
+		$url = substr($url, 0, -1);
+	}
+	header('Location: '.$url);
+	die();
+}
+
+if (!$session_id || !validate_session($session_id)) {
 	// display login form
+	
+	if ($session_id) {
+		invalidate_session($session_id);
+	}
 	
 	header('HTTP/1.0 401 Unauthorized');
 	if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'):
@@ -62,96 +83,82 @@ if (!isset($_COOKIE['session_id'])) {
 	endif;
 	die();
 }
-else {
-	// session_id present
+
+function validate_session($session_id) {
+	// check if user is valid and session has not expired
+	$accountsTable = SECURELOGIN_ACCOUNTS_TABLE;
+	$sessionsTable = SECURELOGIN_SESSIONS_TABLE;
+	$usedNoncesTable = SECURELOGIN_USED_NONCES_TABLE;
 	
-	$session_id = $_COOKIE['session_id'];
+	$q = sprintf(
+		"SELECT * FROM `$accountsTable` a
+		JOIN `$sessionsTable` s
+		ON a.id = s.account
+		WHERE s.id = '%s'
+		AND expire > NOW()
+		AND ip = '%s'
+		LIMIT 1",
+		mysql_real_escape_string($session_id),
+		mysql_real_escape_string($_SERVER['REMOTE_ADDR']));
+	$qr = mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
+	$user = mysql_fetch_assoc($qr);
 	
-	function validate_session($session_id) {
-		// check if user is valid and session has not expired
-		$accountsTable = SECURELOGIN_ACCOUNTS_TABLE;
-		$sessionsTable = SECURELOGIN_SESSIONS_TABLE;
-		$usedNoncesTable = SECURELOGIN_USED_NONCES_TABLE;
-		
-		$q = sprintf(
-			"SELECT * FROM `$accountsTable` a
-			JOIN `$sessionsTable` s
-			ON a.id = s.account
-			WHERE s.id = '%s'
-			AND expire > NOW()
-			AND ip = '%s'
-			LIMIT 1",
-			mysql_real_escape_string($session_id),
-			mysql_real_escape_string($_SERVER['REMOTE_ADDR']));
-		$qr = mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
-		$user = mysql_fetch_assoc($qr);
-		
-		if (!$user) {
-			return false;
-		}
-		
-		if (!SECURELOGIN_REQUIRE_NONCE) {
-			return true;
-		}
-		
-		if (!isset($_GET['nonce']) or !isset($_GET['nonceHash'])) {
-			return false;
-		}
-		
-		$nonce = $_GET['nonce'];
-		$nonceHash = $_GET['nonceHash'];
-		
-		// check if nonce has not been used
-		$q = sprintf(
-			"SELECT COUNT(session_id) FROM `$usedNoncesTable`
-			WHERE session_id = '%s'
-			AND nonce = '%s'",
-			mysql_real_escape_string($session_id),
-			mysql_real_escape_string($nonce));
-		$qr = mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
-		
-		if (mysql_result($qr, 0) > 0) {
-			return false;
-		}
-		
-		// check if nonce matches nonceHash
-		if ($nonceHash != md5($user['sessionAuthHash'] . $nonce)) {
-			return false;
-		}
-		
-		// session is valid, so invalidate nonce
-		$q = sprintf(
-			"INSERT INTO `$usedNoncesTable` (session_id, nonce)
-			VALUES ('%s', '%s')",
-			mysql_real_escape_string($session_id),
-			mysql_real_escape_string($nonce));
-		mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
-		
+	if (!$user) {
+		return false;
+	}
+	
+	if (!SECURELOGIN_REQUIRE_NONCE) {
 		return true;
 	}
 	
-	if (!validate_session($session_id) or isset($_GET['logout'])) {
-		// session timeout management,
-		// session hijack and csrf prevention
-		
-		$sessionsTable = SECURELOGIN_SESSIONS_TABLE;
-		
-		// log user out
-		$q = sprintf("DELETE FROM `$sessionsTable` WHERE id = '%s'", mysql_real_escape_string($session_id));
-		mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
-		
-		setcookie('session_id', 'deleted', time()-30000000);
-		
-		$url = preg_replace('/&?logout=?/', '', $_SERVER['REQUEST_URI']);
-		if (substr($url, -1) == '?') {
-			$url = substr($url, 0, -1);
-		}
-		header('Location: '.$url);
-		die();
+	if (!isset($_GET['nonce']) or !isset($_GET['nonceHash'])) {
+		return false;
 	}
+	
+	$nonce = $_GET['nonce'];
+	$nonceHash = $_GET['nonceHash'];
+	
+	// check if nonce has not been used
+	$q = sprintf(
+		"SELECT COUNT(session_id) FROM `$usedNoncesTable`
+		WHERE session_id = '%s'
+		AND nonce = '%s'",
+		mysql_real_escape_string($session_id),
+		mysql_real_escape_string($nonce));
+	$qr = mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
+	
+	if (mysql_result($qr, 0) > 0) {
+		return false;
+	}
+	
+	// check if nonce matches nonceHash
+	if ($nonceHash != md5($user['sessionAuthHash'] . $nonce)) {
+		return false;
+	}
+	
+	// session is valid, so invalidate nonce
+	$q = sprintf(
+		"INSERT INTO `$usedNoncesTable` (session_id, nonce)
+		VALUES ('%s', '%s')",
+		mysql_real_escape_string($session_id),
+		mysql_real_escape_string($nonce));
+	mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
+	
+	return true;
+}
+
+function invalidate_session($session_id) {
+	$sessionsTable = SECURELOGIN_SESSIONS_TABLE;
+	
+	// log user out
+	$q = sprintf("DELETE FROM `$sessionsTable` WHERE id = '%s'", mysql_real_escape_string($session_id));
+	mysql_query($q) or trigger_error(mysql_error(), E_USER_ERROR);
+	
+	setcookie('session_id', 'deleted', time()-30000000);
 }
 
 unset($securelogin_dir);
 unset($securelogin_root);
+unset($session_id);
 
 // only valid logins can continue
