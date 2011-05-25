@@ -25,6 +25,7 @@ if (isset($_GET['step'])) {
 if (!isset($_COOKIE['session_id'])) {
 	// display login form
 	
+	header('HTTP/1.0 401 Unauthorized');
 	if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'):
 		echo '"Not logged in"';
 	else:
