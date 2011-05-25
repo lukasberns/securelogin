@@ -102,7 +102,7 @@ else {
 		
 		// check if nonce has not been used
 		$q = sprintf(
-			"SELECT COUNT(session_id) FROM usedNonces
+			"SELECT COUNT(session_id) FROM `$usedNoncesTable`
 			WHERE session_id = '%s'
 			AND nonce = '%s'",
 			mysql_real_escape_string($session_id),
