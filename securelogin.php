@@ -107,6 +107,9 @@ function validate_session($session_id) {
 		return false;
 	}
 	
+	define('SECURELOGIN_SESSION_ID', $session_id);
+	define('SECURELOGIN_USER_ID', $user['account']);
+	
 	if (!SECURELOGIN_REQUIRE_NONCE) {
 		return true;
 	}
